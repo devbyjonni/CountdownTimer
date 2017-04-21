@@ -23,7 +23,7 @@ class ViewController: UIViewController, CountdownTimerDelegate {
     var countdownTimerDidStart = false
     
     // Test, for dev
-    let selectedSecs = 30
+    let selectedSecs = 10
     
     
     lazy var messageLabel: UILabel = {
@@ -46,6 +46,7 @@ class ViewController: UIViewController, CountdownTimerDelegate {
         progressBar.setProgressBar(hours: 0, minutes: 0, seconds: selectedSecs)
         stopBtn.isEnabled = false
         stopBtn.alpha = 0.5
+        seconds.text = String(selectedSecs)
         
         view.addSubview(messageLabel)
         
