@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B66EF1D91EA9E6E300649824 /* CustomColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66EF1D81EA9E6E300649824 /* CustomColors.swift */; };
+		B66EF1DC1EA9E75C00649824 /* CountdownTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66EF1DB1EA9E75C00649824 /* CountdownTimer.swift */; };
+		B66EF1DE1EA9E76500649824 /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66EF1DD1EA9E76500649824 /* ProgressBar.swift */; };
 		B6C7B6F91EA8DB9F008B31A6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C7B6F81EA8DB9F008B31A6 /* AppDelegate.swift */; };
 		B6C7B6FB1EA8DB9F008B31A6 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C7B6FA1EA8DB9F008B31A6 /* ViewController.swift */; };
 		B6C7B6FE1EA8DB9F008B31A6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B6C7B6FC1EA8DB9F008B31A6 /* Main.storyboard */; };
@@ -15,6 +18,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		B66EF1D81EA9E6E300649824 /* CustomColors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomColors.swift; sourceTree = "<group>"; };
+		B66EF1DB1EA9E75C00649824 /* CountdownTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountdownTimer.swift; sourceTree = "<group>"; };
+		B66EF1DD1EA9E76500649824 /* ProgressBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressBar.swift; sourceTree = "<group>"; };
 		B6C7B6F51EA8DB9F008B31A6 /* CountdownTimer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CountdownTimer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B6C7B6F81EA8DB9F008B31A6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B6C7B6FA1EA8DB9F008B31A6 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -35,6 +41,57 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B66EF1D31EA9E54700649824 /* Supporting files */ = {
+			isa = PBXGroup;
+			children = (
+				B6C7B6F81EA8DB9F008B31A6 /* AppDelegate.swift */,
+				B6C7B6FF1EA8DB9F008B31A6 /* Assets.xcassets */,
+				B6C7B7041EA8DB9F008B31A6 /* Info.plist */,
+			);
+			name = "Supporting files";
+			sourceTree = "<group>";
+		};
+		B66EF1D41EA9E56B00649824 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				B6C7B6FC1EA8DB9F008B31A6 /* Main.storyboard */,
+				B6C7B7011EA8DB9F008B31A6 /* LaunchScreen.storyboard */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		B66EF1D51EA9E57500649824 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				B6C7B6FA1EA8DB9F008B31A6 /* ViewController.swift */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		B66EF1D61EA9E59300649824 /* Countdown */ = {
+			isa = PBXGroup;
+			children = (
+				B66EF1DB1EA9E75C00649824 /* CountdownTimer.swift */,
+			);
+			name = Countdown;
+			sourceTree = "<group>";
+		};
+		B66EF1D71EA9E5A400649824 /* Progress */ = {
+			isa = PBXGroup;
+			children = (
+				B66EF1DD1EA9E76500649824 /* ProgressBar.swift */,
+			);
+			name = Progress;
+			sourceTree = "<group>";
+		};
+		B66EF1DA1EA9E6FE00649824 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				B66EF1D81EA9E6E300649824 /* CustomColors.swift */,
+			);
+			name = Utils;
+			sourceTree = "<group>";
+		};
 		B6C7B6EC1EA8DB9F008B31A6 = {
 			isa = PBXGroup;
 			children = (
@@ -54,12 +111,12 @@
 		B6C7B6F71EA8DB9F008B31A6 /* CountdownTimer */ = {
 			isa = PBXGroup;
 			children = (
-				B6C7B6F81EA8DB9F008B31A6 /* AppDelegate.swift */,
-				B6C7B6FA1EA8DB9F008B31A6 /* ViewController.swift */,
-				B6C7B6FC1EA8DB9F008B31A6 /* Main.storyboard */,
-				B6C7B6FF1EA8DB9F008B31A6 /* Assets.xcassets */,
-				B6C7B7011EA8DB9F008B31A6 /* LaunchScreen.storyboard */,
-				B6C7B7041EA8DB9F008B31A6 /* Info.plist */,
+				B66EF1D71EA9E5A400649824 /* Progress */,
+				B66EF1D61EA9E59300649824 /* Countdown */,
+				B66EF1D41EA9E56B00649824 /* View */,
+				B66EF1D51EA9E57500649824 /* Controller */,
+				B66EF1DA1EA9E6FE00649824 /* Utils */,
+				B66EF1D31EA9E54700649824 /* Supporting files */,
 			);
 			path = CountdownTimer;
 			sourceTree = "<group>";
@@ -138,6 +195,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				B6C7B6FB1EA8DB9F008B31A6 /* ViewController.swift in Sources */,
+				B66EF1DC1EA9E75C00649824 /* CountdownTimer.swift in Sources */,
+				B66EF1DE1EA9E76500649824 /* ProgressBar.swift in Sources */,
+				B66EF1D91EA9E6E300649824 /* CustomColors.swift in Sources */,
 				B6C7B6F91EA8DB9F008B31A6 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -304,6 +364,7 @@
 				B6C7B7091EA8DB9F008B31A6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
