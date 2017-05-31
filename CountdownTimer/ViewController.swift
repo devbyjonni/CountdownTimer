@@ -41,12 +41,12 @@ class ViewController: UIViewController, CountdownTimerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        countdownTimer.setTimer(hours: 0, minutes: 0, seconds: selectedSecs)
         countdownTimer.delegate = self
+        countdownTimer.setTimer(hours: 0, minutes: 0, seconds: selectedSecs)
         progressBar.setProgressBar(hours: 0, minutes: 0, seconds: selectedSecs)
         stopBtn.isEnabled = false
         stopBtn.alpha = 0.5
-        seconds.text = String(selectedSecs)
+
         
         view.addSubview(messageLabel)
         
