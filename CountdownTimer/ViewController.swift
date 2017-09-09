@@ -24,11 +24,16 @@ class ViewController: UIViewController, CountdownTimerDelegate {
     
     //MARK - Vars
     
-    let countdownTimer = CountdownTimer()
     var countdownTimerDidStart = false
     
+    lazy var countdownTimer: CountdownTimer = {
+        let countdownTimer = CountdownTimer()
+        return countdownTimer
+    }()
+    
+    
     // Test, for dev
-    let selectedSecs = 10
+    let selectedSecs:Int = 10
     
     
     lazy var messageLabel: UILabel = {
@@ -52,7 +57,6 @@ class ViewController: UIViewController, CountdownTimerDelegate {
         stopBtn.isEnabled = false
         stopBtn.alpha = 0.5
 
-        
         view.addSubview(messageLabel)
         
         var constraintCenter = NSLayoutConstraint(item: messageLabel, attribute: .centerX, relatedBy: .equal, toItem: self.view, attribute: .centerX, multiplier: 1, constant: 0)
@@ -69,7 +73,7 @@ class ViewController: UIViewController, CountdownTimerDelegate {
     }
     
     
-    //MARK: - Delegates
+    //MARK: - Countdown Timer Delegate
     
     func countdownTime(time: (hours: String, minutes: String, seconds: String)) {
         hours.text = time.hours
