@@ -15,14 +15,17 @@ protocol CountdownTimerDelegate {
 
 class CountdownTimer {
     
-    var delegate: CountdownTimerDelegate?
+    public var delegate: CountdownTimerDelegate?
     
-    fileprivate var timer = Timer()
     fileprivate var seconds = 0.0
     fileprivate var duration = 0.0
     
+    lazy var timer: Timer = {
+        let timer = Timer()
+        return timer
+    }()
     
-    func setTimer(hours:Int, minutes:Int, seconds:Int) {
+    public func setTimer(hours:Int, minutes:Int, seconds:Int) {
         
         let hoursToSeconds = hours * 3600
         let minutesToSeconds = minutes * 60
@@ -35,15 +38,15 @@ class CountdownTimer {
         delegate?.countdownTime(time: timeString(time: TimeInterval(ceil(duration))))
     }
     
-    func start() {
+    public func start() {
         runTimer()
     }
     
-    func pause() {
+    public func pause() {
         timer.invalidate()
     }
     
-    func stop() {
+    public func stop() {
         timer.invalidate()
         duration = seconds
         delegate?.countdownTime(time: timeString(time: TimeInterval(ceil(duration))))
@@ -58,7 +61,6 @@ class CountdownTimer {
         if duration < 0.0 {
             timer.invalidate()
             timerDone()
-            delegate?.countdownTimerDone()
         } else {
             duration -= 0.01
             delegate?.countdownTime(time: timeString(time: TimeInterval(ceil(duration))))
@@ -72,7 +74,6 @@ class CountdownTimer {
         let seconds = Int(time) % 60
         
         return (hours: String(format:"%02i", hours), minutes: String(format:"%02i", minutes), seconds: String(format:"%02i", seconds))
-        
     }
     
     fileprivate func timerDone() {

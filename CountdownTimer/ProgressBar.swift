@@ -11,11 +11,19 @@ import UIKit
 
 class ProgressBar: UIView, CAAnimationDelegate {
     
-    fileprivate let fgProgressLayer = CAShapeLayer()
-    fileprivate let bgProgressLayer = CAShapeLayer()
     fileprivate var animation = CABasicAnimation()
     fileprivate var animationDidStart = false
     fileprivate var timerDuration = 0
+    
+    lazy var fgProgressLayer: CAShapeLayer = {
+        let fgProgressLayer = CAShapeLayer()
+        return fgProgressLayer
+    }()
+    
+    lazy var bgProgressLayer: CAShapeLayer = {
+        let bgProgressLayer = CAShapeLayer()
+        return bgProgressLayer
+    }()
     
     
     required init(coder aDecoder: NSCoder) {
@@ -96,14 +104,14 @@ class ProgressBar: UIView, CAAnimationDelegate {
     }
     
     
-    func setProgressBar(hours:Int, minutes:Int, seconds:Int) {
+    public func setProgressBar(hours:Int, minutes:Int, seconds:Int) {
         let hoursToSeconds = hours * 3600
         let minutesToSeconds = minutes * 60
         let totalSeconds = seconds + minutesToSeconds + hoursToSeconds
         timerDuration = totalSeconds
     }
     
-    func start() {
+    public func start() {
         if !animationDidStart {
             startAnimation()
         }else{
@@ -111,11 +119,11 @@ class ProgressBar: UIView, CAAnimationDelegate {
         }
     }
     
-    func pause() {
+    public func pause() {
         pauseAnimation()
     }
     
-    func stop() {
+    public func stop() {
         stopAnimation()
     }
     

@@ -11,6 +11,8 @@ import AudioToolbox
 
 class ViewController: UIViewController, CountdownTimerDelegate {
 
+    //MARK - Outlets
+    
     @IBOutlet weak var progressBar: ProgressBar!
     @IBOutlet weak var hours: UILabel!
     @IBOutlet weak var minutes: UILabel!
@@ -18,6 +20,9 @@ class ViewController: UIViewController, CountdownTimerDelegate {
     @IBOutlet weak var counterView: UIStackView!
     @IBOutlet weak var stopBtn: UIButton!
     @IBOutlet weak var startBtn: UIButton!
+    
+    
+    //MARK - Vars
     
     let countdownTimer = CountdownTimer()
     var countdownTimerDidStart = false
