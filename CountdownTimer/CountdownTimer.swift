@@ -8,14 +8,14 @@
 
 import UIKit
 
-protocol CountdownTimerDelegate {
+protocol CountdownTimerDelegate:class {
     func countdownTimerDone()
     func countdownTime(time: (hours: String, minutes:String, seconds:String))
 }
 
 class CountdownTimer {
     
-    public var delegate: CountdownTimerDelegate?
+    weak var delegate: CountdownTimerDelegate?
     
     fileprivate var seconds = 0.0
     fileprivate var duration = 0.0

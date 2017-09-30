@@ -33,7 +33,7 @@ class ViewController: UIViewController, CountdownTimerDelegate {
     
     
     // Test, for dev
-    let selectedSecs:Int = 10
+    let selectedSecs:Int = 120
     
     
     lazy var messageLabel: UILabel = {
@@ -96,8 +96,6 @@ class ViewController: UIViewController, CountdownTimerDelegate {
         
         print("countdownTimerDone")
     }
-    
-    
     
     
     //MARK: - Actions
