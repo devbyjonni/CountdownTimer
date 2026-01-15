@@ -11,6 +11,17 @@ A high-precision, modern countdown timer built for iOS.
 - **Modern Glow Zen Design**: Reimagined with a deep radial gradient background, vibrant glassmorphism controls, and detailed glow effects.
 - **Background Support**: (Pending)
 
+## ⚡️ The Precision Engine
+
+Most timer apps simply subtract `1` every second (`time -= 1`). This is naive; if the CPU is busy or the app lags, "1 second" might take `1.05` seconds. Over a 20-minute session, this drift adds up, making the timer inaccurate.
+
+**CountdownTimer is different.**
+
+It calculates the exact **Target End Date** (`Date + Duration`) the moment you press start. On every frame, it recalculates `Remaining = Target - Now`.
+
+-   **Zero Drift**: Even if the app hangs for 5 seconds, it wakes up with the *correct* remaining time.
+-   **Self-Correcting**: It mathematically guarantees the timer ends exactly when it should.
+
 ## Tech Stack
 
 - **Language**: **Swift 6** (Strict Concurrency Checked)
