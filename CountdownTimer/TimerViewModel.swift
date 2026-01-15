@@ -16,26 +16,19 @@ class TimerViewModel {
     // MARK: - Properties
     
     private let timer = CountdownTimer()
-    private let defaultDuration: Int = 120 // 2 minutes
+    private let defaultDuration: Int = 30 // 2 minutes
     private var cancellables = Set<AnyCancellable>()
     
-    /// True if the timer is currently counting down.
-    var isPlaying = false
+
     
     // MARK: - Observables (Outputs)
-    // The View binds to these closures to update its UI.
     
-    /// Called when the time string changes (HH, MM, SS).
-    var onTimeUpdate: ((String, String, String) -> Void)?
+    @Published var timeLabelText: String = "00:00:00"
+    @Published var progress: Float = 0.0
+    @Published var isPlaying: Bool = false
     
-    /// Called when progress changes (0.0 to 1.0).
-    var onProgressUpdate: ((Float) -> Void)?
-    
-    /// Called when the play/pause state changes.
-    var onStateChange: ((Bool) -> Void)?
-    
-    /// Called when the timer finishes.
-    var onDone: (() -> Void)?
+    /// Emits when the timer finishes.
+    let timerFinished = PassthroughSubject<Void, Never>()
     
     init() {
         setupBindings()
@@ -43,21 +36,18 @@ class TimerViewModel {
     }
     
     private func setupBindings() {
-        // Bind Timer Publishers to ViewModel Observables
+        // Transform the Timer's timeString (tuple) into a formatted String
         timer.$timeString
-            .sink { [weak self] (h, m, s) in
-                self?.onTimeUpdate?(h, m, s)
-            }
-            .store(in: &cancellables)
+            .map { "\($0.0):\($0.1):\($0.2)" }
+            .assign(to: &$timeLabelText)
         
+        // Forward progress
         timer.$progress
-            .sink { [weak self] progress in
-                self?.onProgressUpdate?(progress)
-            }
-            .store(in: &cancellables)
+            .assign(to: &$progress)
         
+        // Timer done logic
         timer.$isDone
-            .dropFirst() // Ignore initial false
+            .dropFirst()
             .filter { $0 == true }
             .sink { [weak self] _ in
                 self?.handleTimerDone()
@@ -73,7 +63,6 @@ class TimerViewModel {
         if !isPlaying {
             timer.start()
             isPlaying = true
-            onStateChange?(true)
         }
     }
     
@@ -81,7 +70,6 @@ class TimerViewModel {
         if isPlaying {
             timer.pause()
             isPlaying = false
-            onStateChange?(false)
         }
     }
     
@@ -96,7 +84,6 @@ class TimerViewModel {
     func stop() {
         timer.stop()
         reset()
-        onStateChange?(false)
     }
     
     func skip() {
@@ -106,11 +93,9 @@ class TimerViewModel {
     }
     
     func refresh() {
-        // Re-emit current state for UI binding
-        let t = timer.timeString
-        onTimeUpdate?(t.hours, t.minutes, t.seconds)
-        onProgressUpdate?(timer.progress)
-        onStateChange?(isPlaying)
+        // No-op in Combine: Subscribers get latest value on subscribe or we can force re-assignment if needed,
+        // but typically CurrentValueSubject/Published holds state.
+        // We'll leave it empty or remove it.
     }
     
     // MARK: - Private Helpers
@@ -118,15 +103,16 @@ class TimerViewModel {
     private func reset() {
         isPlaying = false
         // Initialize timer with default
-        let (h, m, s) = secondsToHoursMinutesSeconds(seconds: defaultDuration)
+        let _ = secondsToHoursMinutesSeconds(seconds: defaultDuration)
         timer.setTimer(hours: 0, minutes: 0, seconds: defaultDuration)
+        // Reset progress manually since timer might not emit immediately on reset if stopped
+        progress = 0.0
     }
     
     private func handleTimerDone() {
         isPlaying = false
-        onStateChange?(false)
-        onProgressUpdate?(1.0)
-        onDone?()
+        progress = 1.0
+        timerFinished.send()
     }
     
     private func secondsToHoursMinutesSeconds (seconds : Int) -> (String, String, String) {

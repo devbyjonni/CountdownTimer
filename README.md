@@ -6,7 +6,7 @@ A high-precision, modern countdown timer built for iOS.
 
 - **Precision Engine**: Powered by **Combine** and `Date`-based calculations to ensure zero drift and absolute accuracy.
 - **Reactive UI**: The visual progress ring and timer text are perfectly synchronized using reactive streams.
-- **Modern Aesthetic**: Reimagined with a dark, "Spotify-style" design featuring bold typography and pill-shaped controls.
+- **Modern Glow Zen Design**: Reimagined with a deep radial gradient background, vibrant glassmorphism controls, and detailed glow effects.
 - **Background Support**: (Pending)
 
 ## Tech Stack

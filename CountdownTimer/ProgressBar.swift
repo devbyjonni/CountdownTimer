@@ -21,6 +21,7 @@ class ProgressBar: UIView {
         layer.lineWidth = 4.0
         layer.strokeStart = 0.0
         layer.strokeEnd = 1.0
+        layer.lineCap = .round
         return layer
     }()
     
@@ -37,8 +38,8 @@ class ProgressBar: UIView {
     
     lazy var fgGradientLayer: CAGradientLayer = {
         let gradientLayer = CAGradientLayer()
-        let colorTop = Theme.Colors.spotifyGreen.cgColor
-        let colorBottom = Theme.Colors.spotifyGreen.cgColor
+        let colorTop = Theme.Colors.zenAccentStart.cgColor
+        let colorBottom = Theme.Colors.zenAccentEnd.cgColor
         gradientLayer.colors = [colorTop, colorBottom]
         gradientLayer.locations = [0.0, 1.0]
         gradientLayer.mask = fgProgressLayer
@@ -47,9 +48,9 @@ class ProgressBar: UIView {
     
     lazy var bgGradientLayer: CAGradientLayer = {
         let gradientLayer = CAGradientLayer()
-        let colorTop = Theme.Colors.darkGray.cgColor
-        let colorBottom = Theme.Colors.darkGray.cgColor // Same color effectively solid, but keeps gradient structure
-        gradientLayer.colors = [colorTop, colorBottom]
+        // Subtle white background track (5% opacity)
+        let color = UIColor.white.withAlphaComponent(0.05).cgColor
+        gradientLayer.colors = [color, color]
         gradientLayer.locations = [0.0, 1.0]
         gradientLayer.mask = bgProgressLayer
         return gradientLayer
