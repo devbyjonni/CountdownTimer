@@ -7,31 +7,31 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B66EF1D91EA9E6E300649824 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66EF1D81EA9E6E300649824 /* Theme.swift */; };
-		B66EF1DC1EA9E75C00649824 /* CountdownTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66EF1DB1EA9E75C00649824 /* CountdownTimer.swift */; };
-		B66EF1DE1EA9E76500649824 /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66EF1DD1EA9E76500649824 /* ProgressBar.swift */; };
-		B66EF1E01EA9E76500649824 /* TimerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66EF1DF1EA9E76500649824 /* TimerViewModel.swift */; };
 		B6C7B6F91EA8DB9F008B31A6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C7B6F81EA8DB9F008B31A6 /* AppDelegate.swift */; };
 		B6C7B6FB1EA8DB9F008B31A6 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C7B6FA1EA8DB9F008B31A6 /* ViewController.swift */; };
 		B6C7B7001EA8DB9F008B31A6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B6C7B6FF1EA8DB9F008B31A6 /* Assets.xcassets */; };
 		B6C7B7031EA8DB9F008B31A6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B6C7B7011EA8DB9F008B31A6 /* LaunchScreen.storyboard */; };
-		FA5D41842F19955D00DEDF29 /* ControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA5D41822F19955D00DEDF29 /* ControlsView.swift */; };
-		FA5D41852F19955D00DEDF29 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA5D41832F19955D00DEDF29 /* HeaderView.swift */; };
+		FA5D41902F1997BF00DEDF29 /* CountdownTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA5D418A2F1997BF00DEDF29 /* CountdownTimer.swift */; };
+		FA5D41912F1997BF00DEDF29 /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA5D41882F1997BF00DEDF29 /* ProgressBar.swift */; };
+		FA5D41922F1997BF00DEDF29 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA5D41872F1997BF00DEDF29 /* HeaderView.swift */; };
+		FA5D41932F1997BF00DEDF29 /* ControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA5D41862F1997BF00DEDF29 /* ControlsView.swift */; };
+		FA5D41942F1997BF00DEDF29 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA5D418C2F1997BF00DEDF29 /* Theme.swift */; };
+		FA5D41952F1997BF00DEDF29 /* TimerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA5D418E2F1997BF00DEDF29 /* TimerViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		B66EF1D81EA9E6E300649824 /* Theme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
-		B66EF1DB1EA9E75C00649824 /* CountdownTimer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountdownTimer.swift; sourceTree = "<group>"; };
-		B66EF1DD1EA9E76500649824 /* ProgressBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressBar.swift; sourceTree = "<group>"; };
-		B66EF1DF1EA9E76500649824 /* TimerViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerViewModel.swift; sourceTree = "<group>"; };
 		B6C7B6F51EA8DB9F008B31A6 /* CountdownTimer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CountdownTimer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B6C7B6F81EA8DB9F008B31A6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B6C7B6FA1EA8DB9F008B31A6 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		B6C7B6FF1EA8DB9F008B31A6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B6C7B7021EA8DB9F008B31A6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B6C7B7041EA8DB9F008B31A6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		FA5D41822F19955D00DEDF29 /* ControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlsView.swift; sourceTree = "<group>"; };
-		FA5D41832F19955D00DEDF29 /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
+		FA5D41862F1997BF00DEDF29 /* ControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlsView.swift; sourceTree = "<group>"; };
+		FA5D41872F1997BF00DEDF29 /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
+		FA5D41882F1997BF00DEDF29 /* ProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBar.swift; sourceTree = "<group>"; };
+		FA5D418A2F1997BF00DEDF29 /* CountdownTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownTimer.swift; sourceTree = "<group>"; };
+		FA5D418C2F1997BF00DEDF29 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		FA5D418E2F1997BF00DEDF29 /* TimerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,8 +58,6 @@
 		B66EF1D41EA9E56B00649824 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				FA5D41822F19955D00DEDF29 /* ControlsView.swift */,
-				FA5D41832F19955D00DEDF29 /* HeaderView.swift */,
 				B6C7B7011EA8DB9F008B31A6 /* LaunchScreen.storyboard */,
 			);
 			name = View;
@@ -69,33 +67,8 @@
 			isa = PBXGroup;
 			children = (
 				B6C7B6FA1EA8DB9F008B31A6 /* ViewController.swift */,
-				B66EF1DF1EA9E76500649824 /* TimerViewModel.swift */,
 			);
 			name = Controller;
-			sourceTree = "<group>";
-		};
-		B66EF1D61EA9E59300649824 /* Countdown */ = {
-			isa = PBXGroup;
-			children = (
-				B66EF1DB1EA9E75C00649824 /* CountdownTimer.swift */,
-			);
-			name = Countdown;
-			sourceTree = "<group>";
-		};
-		B66EF1D71EA9E5A400649824 /* Progress */ = {
-			isa = PBXGroup;
-			children = (
-				B66EF1DD1EA9E76500649824 /* ProgressBar.swift */,
-			);
-			name = Progress;
-			sourceTree = "<group>";
-		};
-		B66EF1DA1EA9E6FE00649824 /* Utils */ = {
-			isa = PBXGroup;
-			children = (
-				B66EF1D81EA9E6E300649824 /* Theme.swift */,
-			);
-			name = Utils;
 			sourceTree = "<group>";
 		};
 		B6C7B6EC1EA8DB9F008B31A6 = {
@@ -117,14 +90,49 @@
 		B6C7B6F71EA8DB9F008B31A6 /* CountdownTimer */ = {
 			isa = PBXGroup;
 			children = (
-				B66EF1D71EA9E5A400649824 /* Progress */,
-				B66EF1D61EA9E59300649824 /* Countdown */,
+				FA5D41892F1997BF00DEDF29 /* Components */,
+				FA5D418B2F1997BF00DEDF29 /* Models */,
+				FA5D418D2F1997BF00DEDF29 /* Resources */,
+				FA5D418F2F1997BF00DEDF29 /* ViewModels */,
 				B66EF1D41EA9E56B00649824 /* View */,
 				B66EF1D51EA9E57500649824 /* Controller */,
-				B66EF1DA1EA9E6FE00649824 /* Utils */,
 				B66EF1D31EA9E54700649824 /* Supporting files */,
 			);
 			path = CountdownTimer;
+			sourceTree = "<group>";
+		};
+		FA5D41892F1997BF00DEDF29 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				FA5D41862F1997BF00DEDF29 /* ControlsView.swift */,
+				FA5D41872F1997BF00DEDF29 /* HeaderView.swift */,
+				FA5D41882F1997BF00DEDF29 /* ProgressBar.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		FA5D418B2F1997BF00DEDF29 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				FA5D418A2F1997BF00DEDF29 /* CountdownTimer.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		FA5D418D2F1997BF00DEDF29 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				FA5D418C2F1997BF00DEDF29 /* Theme.swift */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		FA5D418F2F1997BF00DEDF29 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				FA5D418E2F1997BF00DEDF29 /* TimerViewModel.swift */,
+			);
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -200,13 +208,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				B6C7B6FB1EA8DB9F008B31A6 /* ViewController.swift in Sources */,
-				B66EF1DC1EA9E75C00649824 /* CountdownTimer.swift in Sources */,
-				B66EF1DE1EA9E76500649824 /* ProgressBar.swift in Sources */,
-				B66EF1D91EA9E6E300649824 /* Theme.swift in Sources */,
-				B66EF1E01EA9E76500649824 /* TimerViewModel.swift in Sources */,
+				FA5D41902F1997BF00DEDF29 /* CountdownTimer.swift in Sources */,
+				FA5D41912F1997BF00DEDF29 /* ProgressBar.swift in Sources */,
+				FA5D41922F1997BF00DEDF29 /* HeaderView.swift in Sources */,
+				FA5D41932F1997BF00DEDF29 /* ControlsView.swift in Sources */,
+				FA5D41942F1997BF00DEDF29 /* Theme.swift in Sources */,
+				FA5D41952F1997BF00DEDF29 /* TimerViewModel.swift in Sources */,
 				B6C7B6F91EA8DB9F008B31A6 /* AppDelegate.swift in Sources */,
-				FA5D41842F19955D00DEDF29 /* ControlsView.swift in Sources */,
-				FA5D41852F19955D00DEDF29 /* HeaderView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

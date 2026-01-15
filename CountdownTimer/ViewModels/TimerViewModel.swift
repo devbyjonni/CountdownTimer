@@ -92,18 +92,11 @@ class TimerViewModel {
         handleTimerDone()
     }
     
-    func refresh() {
-        // No-op in Combine: Subscribers get latest value on subscribe or we can force re-assignment if needed,
-        // but typically CurrentValueSubject/Published holds state.
-        // We'll leave it empty or remove it.
-    }
-    
     // MARK: - Private Helpers
     
     private func reset() {
         isPlaying = false
         // Initialize timer with default
-        let _ = secondsToHoursMinutesSeconds(seconds: defaultDuration)
         timer.setTimer(hours: 0, minutes: 0, seconds: defaultDuration)
         // Reset progress manually since timer might not emit immediately on reset if stopped
         progress = 0.0
@@ -113,12 +106,5 @@ class TimerViewModel {
         isPlaying = false
         progress = 1.0
         timerFinished.send()
-    }
-    
-    private func secondsToHoursMinutesSeconds (seconds : Int) -> (String, String, String) {
-        let h = seconds / 3600
-        let m = (seconds % 3600) / 60
-        let s = (seconds % 3600) % 60
-        return (String(format: "%02d", h), String(format: "%02d", m), String(format: "%02d", s))
     }
 }

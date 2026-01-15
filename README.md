@@ -22,7 +22,8 @@ A high-precision, modern countdown timer built for iOS.
 This project demonstrates a professional, scalable architecture for UIKit apps:
 
 - **Programmatic UI**: Complete removal of Storyboards for cleaner, reviewable, and conflict-free UI code.
-- **Components**: Reusable, modern UI components (e.g., `ProgressBar`, `Theme`).
+- **Component-Based**: UI is composed of isolated, reusable components (`HeaderView`, `ControlsView`, `ProgressBar`).
+- **Structured Organization**: Clean separation of concerns with dedicated `Models`, `ViewModels`, `Components`, and `Resources` directories.
 - **Isolation**: Strict adherence to `MainActor` isolation and Sendable types where required.
 
 ## Installation

@@ -200,6 +200,8 @@ extension ViewController {
             .store(in: &cancellables)
     }
     
+    // MARK: - Private Helpers
+    
     private func handleTimerFinished() {
         messageLabel.isHidden = false
         timeLabel.isHidden = true
