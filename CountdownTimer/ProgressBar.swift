@@ -8,7 +8,6 @@
 
 import UIKit
 
-
 class ProgressBar: UIView, CAAnimationDelegate {
     
     fileprivate var animation = CABasicAnimation()
@@ -16,93 +15,82 @@ class ProgressBar: UIView, CAAnimationDelegate {
     fileprivate var timerDuration = 0
     
     lazy var fgProgressLayer: CAShapeLayer = {
-        let fgProgressLayer = CAShapeLayer()
-        return fgProgressLayer
+        let layer = CAShapeLayer()
+        layer.backgroundColor = UIColor.clear.cgColor
+        layer.fillColor = nil
+        layer.strokeColor = UIColor.black.cgColor
+        layer.lineWidth = 4.0
+        layer.strokeStart = 0.0
+        layer.strokeEnd = 0.0
+        return layer
     }()
     
     lazy var bgProgressLayer: CAShapeLayer = {
-        let bgProgressLayer = CAShapeLayer()
-        return bgProgressLayer
+        let layer = CAShapeLayer()
+        layer.backgroundColor = UIColor.clear.cgColor
+        layer.fillColor = nil
+        layer.strokeColor = UIColor.black.cgColor
+        layer.lineWidth = 4.0
+        layer.strokeStart = 0.0
+        layer.strokeEnd = 1.0
+        return layer
     }()
     
+    lazy var fgGradientLayer: CAGradientLayer = {
+        let gradientLayer = CAGradientLayer()
+        let colorTop = CustomColor.lime.cgColor
+        let colorBottom = CustomColor.summerSky.cgColor
+        gradientLayer.colors = [colorTop, colorBottom]
+        gradientLayer.locations = [0.0, 1.0]
+        gradientLayer.mask = fgProgressLayer
+        return gradientLayer
+    }()
+    
+    lazy var bgGradientLayer: CAGradientLayer = {
+        let gradientLayer = CAGradientLayer()
+        let colorTop = CustomColor.flipside.cgColor
+        let colorBottom = CustomColor.flipside.cgColor // Same color effectively solid, but keeps gradient structure
+        gradientLayer.colors = [colorTop, colorBottom]
+        gradientLayer.locations = [0.0, 1.0]
+        gradientLayer.mask = bgProgressLayer
+        return gradientLayer
+    }()
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)!
-        loadBgProgressBar()
-        loadFgProgressBar()
+        setupLayers()
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        loadBgProgressBar()
-        loadFgProgressBar()
+        setupLayers()
     }
     
+    fileprivate func setupLayers() {
+        layer.addSublayer(bgGradientLayer)
+        layer.addSublayer(fgGradientLayer)
+    }
     
-    fileprivate func loadFgProgressBar() {
+    override func layoutSubviews() {
+        super.layoutSubviews()
         
         let startAngle = CGFloat(-Double.pi / 2)
         let endAngle = CGFloat(3 * Double.pi / 2)
-        let centerPoint = CGPoint(x: frame.width/2 , y: frame.height/2)
-        let gradientMaskLayer = gradientMask()
-        fgProgressLayer.path = UIBezierPath(arcCenter:centerPoint, radius: frame.width/2 - 30.0, startAngle:startAngle, endAngle:endAngle, clockwise: true).cgPath
-        fgProgressLayer.backgroundColor = UIColor.clear.cgColor
-        fgProgressLayer.fillColor = nil
-        fgProgressLayer.strokeColor = UIColor.black.cgColor
-        fgProgressLayer.lineWidth = 4.0
-        fgProgressLayer.strokeStart = 0.0
-        fgProgressLayer.strokeEnd = 0.0
+        let centerPoint = CGPoint(x: bounds.width/2 , y: bounds.height/2)
+        let radius = max(0, min(bounds.width, bounds.height)/2 - 30.0)
         
-        gradientMaskLayer.mask = fgProgressLayer
-        layer.addSublayer(gradientMaskLayer)
+        let path = UIBezierPath(arcCenter: centerPoint, radius: radius, startAngle: startAngle, endAngle: endAngle, clockwise: true).cgPath
+        
+        // Update Background
+        bgGradientLayer.frame = bounds
+        bgProgressLayer.frame = bounds
+        bgProgressLayer.path = path
+        
+        // Update Foreground
+        fgGradientLayer.frame = bounds
+        fgProgressLayer.frame = bounds
+        fgProgressLayer.path = path
     }
-    
-    
-    
-    fileprivate func gradientMask() -> CAGradientLayer {
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.frame = bounds
-        gradientLayer.locations = [0.0, 1.0]
-        let colorTop = CustomColor.lime.cgColor
-        let colorBottom = CustomColor.summerSky.cgColor
-        let arrayOfColors: [CGColor] = [colorTop, colorBottom]
-        gradientLayer.colors = arrayOfColors
-        
-        return gradientLayer
-    }
-    
-    
-    fileprivate func loadBgProgressBar() {
-        
-        let startAngle = CGFloat(-Double.pi / 2)
-        let endAngle = CGFloat(3 * Double.pi / 2)
-        let centerPoint = CGPoint(x: frame.width/2 , y: frame.height/2)
-        let gradientMaskLayer = gradientMaskBg()
-        bgProgressLayer.path = UIBezierPath(arcCenter:centerPoint, radius: frame.width/2 - 30.0, startAngle:startAngle, endAngle:endAngle, clockwise: true).cgPath
-        bgProgressLayer.backgroundColor = UIColor.clear.cgColor
-        bgProgressLayer.fillColor = nil
-        bgProgressLayer.strokeColor = UIColor.black.cgColor
-        bgProgressLayer.lineWidth = 4.0
-        bgProgressLayer.strokeStart = 0.0
-        bgProgressLayer.strokeEnd = 1.0
-        
-        gradientMaskLayer.mask = bgProgressLayer
-        layer.addSublayer(gradientMaskLayer)
-    }
-    
-    
-    fileprivate func gradientMaskBg() -> CAGradientLayer {
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.frame = bounds
-        gradientLayer.locations = [0.0, 1.0]
-        let colorTop = CustomColor.flipside.cgColor
-        let colorBottom = CustomColor.flipside.cgColor
-        let arrayOfColors: [CGColor] = [colorTop, colorBottom]
-        gradientLayer.colors = arrayOfColors
-        
-        return gradientLayer
-    }
-    
     
     public func setProgressBar(hours:Int, minutes:Int, seconds:Int) {
         let hoursToSeconds = hours * 3600
@@ -179,17 +167,13 @@ class ProgressBar: UIView, CAAnimationDelegate {
         fgProgressLayer.speed = 1.0
         fgProgressLayer.timeOffset = 0.0
         fgProgressLayer.beginTime = 0.0
-        let timeSincePause = fgProgressLayer.convertTime(CACurrentMediaTime(), from: nil) - pausedTime
-        fgProgressLayer.beginTime = timeSincePause
+        fgProgressLayer.beginTime = fgProgressLayer.convertTime(CACurrentMediaTime(), from: nil) - pausedTime
     }
     
     internal func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
-        stopAnimation()
+        if flag {
+             stopAnimation()
+        }
     }
     
-    
 }
-
-
-
-
