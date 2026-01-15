@@ -63,9 +63,9 @@ class ProgressBar: UIView, CAAnimationDelegate {
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = bounds
         gradientLayer.locations = [0.0, 1.0]
-        let colorTop: AnyObject = CustomColor.lime.cgColor
-        let colorBottom: AnyObject = CustomColor.summerSky.cgColor
-        let arrayOfColors: [AnyObject] = [colorTop, colorBottom]
+        let colorTop = CustomColor.lime.cgColor
+        let colorBottom = CustomColor.summerSky.cgColor
+        let arrayOfColors: [CGColor] = [colorTop, colorBottom]
         gradientLayer.colors = arrayOfColors
         
         return gradientLayer
@@ -95,9 +95,9 @@ class ProgressBar: UIView, CAAnimationDelegate {
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = bounds
         gradientLayer.locations = [0.0, 1.0]
-        let colorTop: AnyObject = CustomColor.flipside.cgColor
-        let colorBottom: AnyObject = CustomColor.flipside.cgColor
-        let arrayOfColors: [AnyObject] = [colorTop, colorBottom]
+        let colorTop = CustomColor.flipside.cgColor
+        let colorBottom = CustomColor.flipside.cgColor
+        let arrayOfColors: [CGColor] = [colorTop, colorBottom]
         gradientLayer.colors = arrayOfColors
         
         return gradientLayer
@@ -140,7 +140,7 @@ class ProgressBar: UIView, CAAnimationDelegate {
         animation.delegate = self
         animation.isRemovedOnCompletion = false
         animation.isAdditive = true
-        animation.fillMode = kCAFillModeForwards
+        animation.fillMode = CAMediaTimingFillMode.forwards
         fgProgressLayer.add(animation, forKey: "strokeEnd")
         animationDidStart = true
         
