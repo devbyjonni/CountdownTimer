@@ -28,48 +28,12 @@ class ViewController: UIViewController {
     
     // MARK: - UI Components
     
-    // Header Pill
-    private lazy var headerPill: UIView = {
-        let view = UIView()
+    // MARK: - UI Components
+    
+    private lazy var headerView: HeaderView = {
+        let view = HeaderView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.white.withAlphaComponent(0.05)
-        view.layer.borderColor = UIColor.white.withAlphaComponent(0.1).cgColor
-        view.layer.borderWidth = 1
-        view.layer.cornerRadius = 15
         return view
-    }()
-    
-    private lazy var headerDot: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor(red: 129/255, green: 140/255, blue: 248/255, alpha: 1.0) // Indigo-400
-        view.layer.cornerRadius = 4
-        return view
-    }()
-    
-    private lazy var headerLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "DEEP WORK"
-        label.font = Theme.Fonts.pillLabel()
-        label.textColor = UIColor(red: 199/255, green: 210/255, blue: 254/255, alpha: 0.8) // Indigo-200/80
-        
-        // Kern (Tracking)
-        let attrString = NSMutableAttributedString(string: "DEEP WORK")
-        attrString.addAttribute(NSAttributedString.Key.kern, value: 2.0, range: NSRange(location: 0, length: attrString.length))
-        label.attributedText = attrString
-        
-        return label
-    }()
-    
-    private lazy var headerTitle: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "UI Design Systems"
-        label.font = Theme.Fonts.title()
-        label.textColor = Theme.Colors.text
-        label.textAlignment = .center
-        return label
     }()
     
     private lazy var sessionLabel: UILabel = {
@@ -104,18 +68,10 @@ class ViewController: UIViewController {
     }()
     
     // Player Controls
-    private lazy var playPauseBtn: UIButton = createGlowButton(icon: Theme.Icons.play(), size: 90)
-    private lazy var stopBtn: UIButton = createGlassButton(icon: Theme.Icons.refresh(), size: 64)
-    private lazy var skipBtn: UIButton = createGlassButton(icon: Theme.Icons.skip(), size: 64)
-    
-    private lazy var controlsStackView: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [stopBtn, playPauseBtn, skipBtn])
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.axis = .horizontal
-        stack.distribution = .equalCentering 
-        stack.alignment = .center
-        stack.spacing = 30
-        return stack
+    private lazy var controlsView: ControlsView = {
+        let view = ControlsView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
     
     private lazy var messageLabel: UILabel = {
@@ -150,37 +106,17 @@ extension ViewController {
         // Background
         view.layer.insertSublayer(backgroundLayer, at: 0)
         
-        // Header
-        headerPill.addSubview(headerDot)
-        headerPill.addSubview(headerLabel)
-        
-        view.addSubview(headerPill)
-        view.addSubview(headerTitle)
-        
+        view.addSubview(headerView)
         view.addSubview(progressBar)
         view.addSubview(timeLabel)
-        view.addSubview(controlsStackView)
+        view.addSubview(controlsView)
         view.addSubview(sessionLabel)
         view.addSubview(messageLabel)
         
         NSLayoutConstraint.activate([
-            // Header Pill
-            headerPill.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24),
-            headerPill.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            headerPill.heightAnchor.constraint(equalToConstant: 30),
-            
-            headerDot.leadingAnchor.constraint(equalTo: headerPill.leadingAnchor, constant: 12),
-            headerDot.centerYAnchor.constraint(equalTo: headerPill.centerYAnchor),
-            headerDot.widthAnchor.constraint(equalToConstant: 8),
-            headerDot.heightAnchor.constraint(equalToConstant: 8),
-            
-            headerLabel.leadingAnchor.constraint(equalTo: headerDot.trailingAnchor, constant: 8),
-            headerLabel.trailingAnchor.constraint(equalTo: headerPill.trailingAnchor, constant: -12),
-            headerLabel.centerYAnchor.constraint(equalTo: headerPill.centerYAnchor),
-            
-            // Header Title
-            headerTitle.topAnchor.constraint(equalTo: headerPill.bottomAnchor, constant: 20),
-            headerTitle.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            // Header
+            headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24),
+            headerView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
             // ProgressBar (Centered)
             progressBar.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -192,24 +128,19 @@ extension ViewController {
             timeLabel.centerXAnchor.constraint(equalTo: progressBar.centerXAnchor),
             timeLabel.centerYAnchor.constraint(equalTo: progressBar.centerYAnchor),
             
-            // Controls StackView
-            controlsStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            controlsStackView.topAnchor.constraint(equalTo: progressBar.bottomAnchor, constant: 60),
-            controlsStackView.widthAnchor.constraint(equalToConstant: 280),
+            // Controls
+            controlsView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            controlsView.topAnchor.constraint(equalTo: progressBar.bottomAnchor, constant: 60),
+            controlsView.widthAnchor.constraint(equalToConstant: 280),
             
             // Session Label
-            sessionLabel.topAnchor.constraint(equalTo: controlsStackView.bottomAnchor, constant: 40),
+            sessionLabel.topAnchor.constraint(equalTo: controlsView.bottomAnchor, constant: 40),
             sessionLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
             // Message Label
             messageLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             messageLabel.centerYAnchor.constraint(equalTo: progressBar.centerYAnchor)
         ])
-        
-        // Actions
-        playPauseBtn.addTarget(self, action: #selector(togglePlay), for: .touchUpInside)
-        stopBtn.addTarget(self, action: #selector(stopTimer), for: .touchUpInside)
-        skipBtn.addTarget(self, action: #selector(skipTimer), for: .touchUpInside)
     }
     
     override func viewDidLayoutSubviews() {
@@ -240,8 +171,7 @@ extension ViewController {
         viewModel.$isPlaying
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isPlaying in
-                let icon = isPlaying ? Theme.Icons.pause() : Theme.Icons.play()
-                self?.playPauseBtn.setImage(icon, for: .normal)
+                self?.controlsView.setPlayingState(isPlaying)
             }
             .store(in: &cancellables)
             
@@ -251,6 +181,22 @@ extension ViewController {
             .sink { [weak self] in
                 self?.handleTimerFinished()
             }
+            .store(in: &cancellables)
+            
+        // User Inputs (View -> ViewModel)
+        controlsView.playPauseTapped
+            .sink { [weak self] in self?.viewModel.toggle() }
+            .store(in: &cancellables)
+            
+        controlsView.stopTapped
+            .sink { [weak self] in
+                self?.viewModel.stop()
+                self?.resetUI()
+            }
+            .store(in: &cancellables)
+            
+        controlsView.skipTapped
+            .sink { [weak self] in self?.viewModel.skip() }
             .store(in: &cancellables)
     }
     
@@ -266,63 +212,6 @@ extension ViewController {
             self?.viewModel.stop()
             self?.resetUI()
         }
-    }
-    
-    // MARK: - Factory Methods
-    
-
-    
-    func createGlowButton(icon: UIImage?, size: CGFloat) -> UIButton {
-        let btn = UIButton(type: .custom)
-        btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.setImage(icon, for: .normal)
-        btn.backgroundColor = Theme.Colors.white.withAlphaComponent(0.9) // Soften the stark white
-        btn.tintColor = Theme.Colors.indigo // Indigo icon
-        btn.layer.cornerRadius = size / 2
-        
-        // Glow Shadow
-        btn.layer.shadowColor = Theme.Colors.indigo.cgColor
-        btn.layer.shadowOffset = .zero
-        btn.layer.shadowRadius = 20
-        btn.layer.shadowOpacity = 0.5
-        
-        btn.widthAnchor.constraint(equalToConstant: size).isActive = true
-        btn.heightAnchor.constraint(equalToConstant: size).isActive = true
-        return btn
-    }
-    
-    func createGlassButton(icon: UIImage?, size: CGFloat) -> UIButton {
-        let btn = UIButton(type: .custom)
-        btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.setImage(icon, for: .normal)
-        btn.backgroundColor = UIColor.white.withAlphaComponent(0.05)
-        btn.layer.borderColor = UIColor.white.withAlphaComponent(0.1).cgColor
-        btn.layer.borderWidth = 1
-        btn.tintColor = UIColor.white.withAlphaComponent(0.7)
-        btn.layer.cornerRadius = size / 2
-        
-        btn.widthAnchor.constraint(equalToConstant: size).isActive = true
-        btn.heightAnchor.constraint(equalToConstant: size).isActive = true
-        return btn
-    }
-}
-
-// MARK: - Actions
-
-extension ViewController {
-    @objc func togglePlay() {
-        messageLabel.isHidden = true
-        timeLabel.isHidden = false
-        viewModel.toggle()
-    }
-    
-    @objc func stopTimer() {
-        viewModel.stop()
-        resetUI()
-    }
-    
-    @objc func skipTimer() {
-        viewModel.skip()
     }
     
     private func resetUI() {

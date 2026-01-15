@@ -15,6 +15,8 @@
 		B6C7B6FB1EA8DB9F008B31A6 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C7B6FA1EA8DB9F008B31A6 /* ViewController.swift */; };
 		B6C7B7001EA8DB9F008B31A6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B6C7B6FF1EA8DB9F008B31A6 /* Assets.xcassets */; };
 		B6C7B7031EA8DB9F008B31A6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B6C7B7011EA8DB9F008B31A6 /* LaunchScreen.storyboard */; };
+		FA5D41842F19955D00DEDF29 /* ControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA5D41822F19955D00DEDF29 /* ControlsView.swift */; };
+		FA5D41852F19955D00DEDF29 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA5D41832F19955D00DEDF29 /* HeaderView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +30,8 @@
 		B6C7B6FF1EA8DB9F008B31A6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B6C7B7021EA8DB9F008B31A6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B6C7B7041EA8DB9F008B31A6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FA5D41822F19955D00DEDF29 /* ControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlsView.swift; sourceTree = "<group>"; };
+		FA5D41832F19955D00DEDF29 /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +58,8 @@
 		B66EF1D41EA9E56B00649824 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				FA5D41822F19955D00DEDF29 /* ControlsView.swift */,
+				FA5D41832F19955D00DEDF29 /* HeaderView.swift */,
 				B6C7B7011EA8DB9F008B31A6 /* LaunchScreen.storyboard */,
 			);
 			name = View;
@@ -199,6 +205,8 @@
 				B66EF1D91EA9E6E300649824 /* Theme.swift in Sources */,
 				B66EF1E01EA9E76500649824 /* TimerViewModel.swift in Sources */,
 				B6C7B6F91EA8DB9F008B31A6 /* AppDelegate.swift in Sources */,
+				FA5D41842F19955D00DEDF29 /* ControlsView.swift in Sources */,
+				FA5D41852F19955D00DEDF29 /* HeaderView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
