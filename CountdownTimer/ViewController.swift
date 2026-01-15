@@ -9,206 +9,188 @@
 import UIKit
 import AudioToolbox
 
-class ViewController: UIViewController, CountdownTimerDelegate {
+class ViewController: UIViewController {
 
-    //MARK: - UI Components
+    // MARK: - Properties
     
-    lazy var progressBar: ProgressBar = {
+    private let viewModel = TimerViewModel()
+    
+    // MARK: - UI Components
+    
+    private lazy var progressBar: ProgressBar = {
         let view = ProgressBar()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .clear
         return view
     }()
     
-    lazy var hoursLabel: UILabel = createLabel(text: "00")
-    lazy var minutesLabel: UILabel = createLabel(text: "00")
-    lazy var secondsLabel: UILabel = createLabel(text: "00")
-    lazy var colon1Label: UILabel = createLabel(text: ":")
-    lazy var colon2Label: UILabel = createLabel(text: ":")
-    
-    lazy var counterStackView: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [hoursLabel, colon1Label, minutesLabel, colon2Label, secondsLabel])
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.axis = .horizontal
-        stack.distribution = .equalSpacing
-        stack.spacing = 3
-        stack.alignment = .center
-        return stack
-    }()
-    
-    lazy var stopBtn: UIButton = {
-        let btn = UIButton(type: .custom)
-        btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.setTitle("STOP", for: .normal)
-        btn.setTitleColor(.white, for: .normal)
-        btn.setTitleColor(.gray, for: .highlighted)
-        btn.addTarget(self, action: #selector(stopTimer), for: .touchUpInside)
-        return btn
-    }()
-    
-    lazy var startBtn: UIButton = {
-        let btn = UIButton(type: .custom)
-        btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.setTitle("START", for: .normal)
-        btn.setTitleColor(.white, for: .normal)
-        btn.setTitleColor(.gray, for: .highlighted)
-        btn.addTarget(self, action: #selector(startTimer), for: .touchUpInside)
-        return btn
-    }()
-    
-    lazy var buttonStackView: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [stopBtn, startBtn])
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.axis = .horizontal
-        stack.distribution = .fillEqually
-        stack.spacing = 0 // Buttons were catching properly in storyboard
-        return stack
-    }()
-    
-    lazy var messageLabel: UILabel = {
+    // Timer Label
+    private lazy var timeLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 24.0, weight: .light)
-        label.textColor = UIColor.white
+        label.text = "00:00:00"
+        label.textColor = Theme.Colors.text
+        label.font = Theme.Fonts.timer() // Ensure this font is monospaced or looks good for single string
+        label.textAlignment = .center
+        return label
+    }()
+    
+    // Player Controls
+    private lazy var playPauseBtn: UIButton = createCircleButton(icon: Theme.Icons.play(), size: Theme.Layout.playButtonSize)
+    private lazy var stopBtn: UIButton = createIconOnlyButton(icon: Theme.Icons.stop(), size: Theme.Layout.sideButtonSize)
+    private lazy var skipBtn: UIButton = createIconOnlyButton(icon: Theme.Icons.skip(), size: Theme.Layout.sideButtonSize)
+    
+    private lazy var controlsStackView: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [stopBtn, playPauseBtn, skipBtn])
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.axis = .horizontal
+        stack.distribution = .equalCentering // Spreads them out nicely or Center with spacing?
+        stack.alignment = .center
+        stack.spacing = 40
+        return stack
+    }()
+    
+    private lazy var messageLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = Theme.Fonts.title()
+        label.textColor = Theme.Colors.text
         label.textAlignment = .center
         label.text = "Done!"
         label.isHidden = true
         return label
     }()
     
-    //MARK: - Vars
-    
-    var countdownTimerDidStart = false
-    
-    lazy var countdownTimer: CountdownTimer = {
-        let countdownTimer = CountdownTimer()
-        return countdownTimer
-    }()
-    
-    // Test, for dev
-    let selectedSecs:Int = 120
-    
-    //MARK: - Life Cycle
+    // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        
-        countdownTimer.delegate = self
-        countdownTimer.setTimer(hours: 0, minutes: 0, seconds: selectedSecs)
-        progressBar.setProgressBar(hours: 0, minutes: 0, seconds: selectedSecs)
-        
-        stopBtn.isEnabled = false
-        stopBtn.alpha = 0.5
+        bindViewModel()
+        viewModel.refresh()
     }
     
-    override var preferredStatusBarStyle : UIStatusBarStyle {
+    override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
+}
+
+// MARK: - Setup & Binding
+
+private extension ViewController {
     
-    //MARK: - UI Setup
-    
-    private func setupUI() {
-        view.backgroundColor = .black
+    func setupUI() {
+        view.backgroundColor = Theme.Colors.background
         
         view.addSubview(progressBar)
-        view.addSubview(counterStackView)
-        view.addSubview(buttonStackView)
+        view.addSubview(timeLabel)
+        view.addSubview(controlsStackView)
         view.addSubview(messageLabel)
         
         NSLayoutConstraint.activate([
             // ProgressBar
             progressBar.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            progressBar.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            progressBar.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -50), // Move up slightly
             progressBar.widthAnchor.constraint(equalToConstant: 300),
             progressBar.heightAnchor.constraint(equalToConstant: 300),
             
-            // Counter StackView (Center of view, same as progress bar center)
-            counterStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            counterStackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            counterStackView.heightAnchor.constraint(equalToConstant: 48),
+            // Timer Label
+            timeLabel.centerXAnchor.constraint(equalTo: progressBar.centerXAnchor),
+            timeLabel.centerYAnchor.constraint(equalTo: progressBar.centerYAnchor),
             
-            // Button StackView
-            buttonStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            buttonStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            buttonStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -30), // Adjusted from top layout guide logic loosely
-            buttonStackView.heightAnchor.constraint(equalToConstant: 50),
+            // Controls StackView
+            controlsStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            controlsStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -40),
+            controlsStackView.heightAnchor.constraint(equalToConstant: Theme.Layout.playButtonSize), // Constrain height to tallest item
             
-            // Message Label (Centered)
+            // Message Label
             messageLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            messageLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            messageLabel.centerYAnchor.constraint(equalTo: progressBar.centerYAnchor)
         ])
+        
+        // Actions
+        playPauseBtn.addTarget(self, action: #selector(togglePlay), for: .touchUpInside)
+        stopBtn.addTarget(self, action: #selector(stopTimer), for: .touchUpInside)
+        skipBtn.addTarget(self, action: #selector(skipTimer), for: .touchUpInside)
+        
+        playPauseBtn.backgroundColor = Theme.Colors.white
+        playPauseBtn.tintColor = Theme.Colors.black
     }
     
-    private func createLabel(text: String) -> UILabel {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = text
-        label.textColor = .white
-        label.font = UIFont.systemFont(ofSize: 32, weight: .light)
-        label.textAlignment = .center
+    /// Binds the ViewModel's outputs to the View's inputs.
+    /// This is where the magic happens: Data (VM) -> UI (View).
+    func bindViewModel() {
+        // updates the timer text labels (e.g. "00" "05" "30")
+        viewModel.onTimeUpdate = { [weak self] h, m, s in
+            self?.timeLabel.text = "\(h):\(m):\(s)"
+        }
         
-        // Add width constraints for fixed width digits if needed, but stackview distribution might handle it.
-        // Original storyboard had widths: 39, 10, 39, 10, 40.
-        // To be safe and identical:
-        let width: CGFloat = (text == ":") ? 10 : 39
-        label.widthAnchor.constraint(equalToConstant: width).isActive = true
-        
-        return label
-    }
-
-    //MARK: - Countdown Timer Delegate
-    
-    func countdownTime(time: (hours: String, minutes: String, seconds: String)) {
-        hoursLabel.text = time.hours
-        minutesLabel.text = time.minutes
-        secondsLabel.text = time.seconds
-    }
-    
-    func countdownTimerDone() {
-        counterStackView.isHidden = true
-        messageLabel.isHidden = false
-        secondsLabel.text = String(selectedSecs)
-        countdownTimerDidStart = false
-        stopBtn.isEnabled = false
-        stopBtn.alpha = 0.5
-        startBtn.setTitle("START",for: .normal)
-        
-        AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
-        
-        print("countdownTimerDone")
-    }
-    
-    //MARK: - Actions
-    
-    @objc func startTimer(_ sender: UIButton) {
-        
-        messageLabel.isHidden = true
-        counterStackView.isHidden = false
-        
-        stopBtn.isEnabled = true
-        stopBtn.alpha = 1.0
-        
-        if !countdownTimerDidStart{
-            countdownTimer.start()
-            progressBar.start()
-            countdownTimerDidStart = true
-            startBtn.setTitle("PAUSE",for: .normal)
+        viewModel.onStateChange = { [weak self] isPlaying in
+            let icon = isPlaying ? Theme.Icons.pause() : Theme.Icons.play()
+            self?.playPauseBtn.setImage(icon, for: .normal)
             
-        }else{
-            countdownTimer.pause()
-            progressBar.pause()
-            countdownTimerDidStart = false
-            startBtn.setTitle("RESUME",for: .normal)
+            // ProgressBar is now driven by onProgressUpdate, no need to start/pause animation
+        }
+        
+        viewModel.onProgressUpdate = { [weak self] progress in
+             self?.progressBar.setProgress(progress)
+        }
+        
+        viewModel.onDone = { [weak self] in
+            // Handle done state (e.g. show message, vibrate)
+            self?.messageLabel.isHidden = false
+            self?.timeLabel.isHidden = true
+            self?.progressBar.stop()
+            AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
         }
     }
     
-    @objc func stopTimer(_ sender: UIButton) {
-        countdownTimer.stop()
-        progressBar.stop()
-        countdownTimerDidStart = false
-        stopBtn.isEnabled = false
-        stopBtn.alpha = 0.5
-        startBtn.setTitle("START",for: .normal)
+    // MARK: - Factory Methods
+    
+
+    
+    func createCircleButton(icon: UIImage?, size: CGFloat) -> UIButton {
+        let btn = UIButton(type: .custom)
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.setImage(icon, for: .normal)
+        btn.layer.cornerRadius = size / 2
+        btn.widthAnchor.constraint(equalToConstant: size).isActive = true
+        btn.heightAnchor.constraint(equalToConstant: size).isActive = true
+        return btn
+    }
+    
+    func createIconOnlyButton(icon: UIImage?, size: CGFloat) -> UIButton {
+        let btn = UIButton(type: .custom)
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        btn.setImage(icon, for: .normal)
+        btn.tintColor = Theme.Colors.white
+        btn.widthAnchor.constraint(equalToConstant: size).isActive = true
+        btn.heightAnchor.constraint(equalToConstant: size).isActive = true
+        return btn
+    }
+}
+
+// MARK: - Actions
+
+extension ViewController {
+    @objc func togglePlay() {
+        messageLabel.isHidden = true
+        timeLabel.isHidden = false
+        viewModel.toggle()
+    }
+    
+    @objc func stopTimer() {
+        viewModel.stop()
+        resetUI()
+    }
+    
+    @objc func skipTimer() {
+        viewModel.skip()
+    }
+    
+    private func resetUI() {
+        messageLabel.isHidden = true
+        timeLabel.isHidden = false
+        progressBar.stop() // Reset animation
     }
 }

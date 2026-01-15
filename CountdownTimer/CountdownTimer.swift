@@ -6,88 +6,117 @@
 //  Copyright © 2017 Jonni Akesson. All rights reserved.
 //
 
-import UIKit
+import Foundation
+import Combine
 
-protocol CountdownTimerDelegate: AnyObject {
-    func countdownTimerDone()
-    func countdownTime(time: (hours: String, minutes:String, seconds:String))
-}
-
+/// A high-precision countdown timer engine powered by Combine.
+/// Uses `Date` calculations to prevent drift and ensures accuracy.
 class CountdownTimer {
     
-    weak var delegate: CountdownTimerDelegate?
+    // MARK: - Publishers
+    // ViewModels subscribe to these for reactive updates.
     
-    fileprivate var seconds = 0.0
-    fileprivate var duration = 0.0
+    /// Emits the current remaining time as strings (HH, MM, SS).
+    @Published var timeString: (hours: String, minutes: String, seconds: String) = ("00", "00", "00")
     
-    lazy var timer: Timer = {
-        let timer = Timer()
-        return timer
-    }()
+    /// Emits progress from 0.0 (start) to 1.0 (finished).
+    @Published var progress: Float = 0.0
     
-    public func setTimer(hours:Int, minutes:Int, seconds:Int) {
+    /// Emits true when the timer reaches zero.
+    @Published var isDone: Bool = false
+    
+    // MARK: - Private Properties
+    
+    private var totalDuration: TimeInterval = 0
+    private var timeRemaining: TimeInterval = 0
+    private var targetEndTime: Date?
+    private var timerCancellable: AnyCancellable?
+    
+    // MARK: - Public Methods
+    
+    func setTimer(hours: Int, minutes: Int, seconds: Int) {
+        let totalSeconds = (hours * 3600) + (minutes * 60) + seconds
+        self.totalDuration = TimeInterval(totalSeconds)
+        self.timeRemaining = self.totalDuration
         
-        let hoursToSeconds = hours * 3600
-        let minutesToSeconds = minutes * 60
-        let secondsToSeconds = seconds
+        updateState()
+    }
+    
+    func start() {
+        // If already running, do nothing
+        guard timerCancellable == nil else { return }
         
-        let seconds = secondsToSeconds + minutesToSeconds + hoursToSeconds
-        self.seconds = Double(seconds)
-        self.duration = Double(seconds)
+        // Calculate target end time based on current remaining time
+        targetEndTime = Date().addingTimeInterval(timeRemaining)
+        isDone = false
         
-        delegate?.countdownTime(time: timeString(time: TimeInterval(ceil(duration))))
+        timerCancellable = Timer.publish(every: 0.1, on: .main, in: .common)
+            .autoconnect()
+            .sink { [weak self] _ in
+                self?.tick()
+            }
     }
     
-    public func start() {
-        runTimer()
+    func pause() {
+        stopTimer()
+        // timeRemaining is preserved
     }
     
-    public func pause() {
-        timer.invalidate()
+    func stop() {
+        stopTimer()
+        reset()
     }
     
-    public func stop() {
-        timer.invalidate()
-        duration = seconds
-        delegate?.countdownTime(time: timeString(time: TimeInterval(ceil(duration))))
+    // MARK: - Private Helpers
+    
+    private func stopTimer() {
+        timerCancellable?.cancel()
+        timerCancellable = nil
     }
     
-    
-    fileprivate func runTimer() {
-        timer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(updateTimer), userInfo: nil, repeats: true)
+    private func reset() {
+        timeRemaining = totalDuration
+        isDone = false
+        updateState()
     }
     
-    @objc fileprivate func updateTimer(){
-        if duration < 0.0 {
-            timer.invalidate()
-            timerDone()
+    private func tick() {
+        guard let endTime = targetEndTime else { return }
+        
+        let now = Date()
+        let remaining = endTime.timeIntervalSince(now)
+        
+        if remaining <= 0 {
+            stopTimer()
+            timeRemaining = 0
+            isDone = true
         } else {
-            duration -= 0.01
-            delegate?.countdownTime(time: timeString(time: TimeInterval(ceil(duration))))
+            timeRemaining = remaining
+        }
+        
+        updateState()
+    }
+    
+    private func updateState() {
+        // Time String
+        let time = Int(ceil(timeRemaining))
+        let h = time / 3600
+        let m = (time % 3600) / 60
+        let s = time % 60
+        
+        timeString = (
+            String(format: "%02d", h),
+            String(format: "%02d", m),
+            String(format: "%02d", s)
+        )
+        
+        // Progress (0.0 to 1.0)
+        if totalDuration > 0 {
+            // Calculate elapsed fraction. 0.0 = Start, 1.0 = End.
+            let elapsed = totalDuration - timeRemaining
+            progress = Float(elapsed / totalDuration)
+        } else {
+            progress = 0.0
         }
     }
-    
-    fileprivate func timeString(time:TimeInterval) -> (hours: String, minutes:String, seconds:String) {
-        
-        let hours = Int(time) / 3600
-        let minutes = Int(time) / 60 % 60
-        let seconds = Int(time) % 60
-        
-        return (hours: String(format:"%02i", hours), minutes: String(format:"%02i", minutes), seconds: String(format:"%02i", seconds))
-    }
-    
-    fileprivate func timerDone() {
-        timer.invalidate()
-        duration = seconds
-        delegate?.countdownTimerDone()
-    }
-    
-    
-    
-    
-    
-    
-    
-    
-    
 }

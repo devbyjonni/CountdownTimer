@@ -8,12 +8,11 @@
 
 import UIKit
 
-class ProgressBar: UIView, CAAnimationDelegate {
+/// A custom circular progress bar view.
+/// Managed reactively via `setProgress(_:)`.
+class ProgressBar: UIView {
     
-    fileprivate var animation = CABasicAnimation()
-    fileprivate var animationDidStart = false
-    fileprivate var timerDuration = 0
-    
+    // MARK: - Layer Properties
     lazy var fgProgressLayer: CAShapeLayer = {
         let layer = CAShapeLayer()
         layer.backgroundColor = UIColor.clear.cgColor
@@ -21,7 +20,7 @@ class ProgressBar: UIView, CAAnimationDelegate {
         layer.strokeColor = UIColor.black.cgColor
         layer.lineWidth = 4.0
         layer.strokeStart = 0.0
-        layer.strokeEnd = 0.0
+        layer.strokeEnd = 1.0
         return layer
     }()
     
@@ -38,8 +37,8 @@ class ProgressBar: UIView, CAAnimationDelegate {
     
     lazy var fgGradientLayer: CAGradientLayer = {
         let gradientLayer = CAGradientLayer()
-        let colorTop = CustomColor.lime.cgColor
-        let colorBottom = CustomColor.summerSky.cgColor
+        let colorTop = Theme.Colors.spotifyGreen.cgColor
+        let colorBottom = Theme.Colors.spotifyGreen.cgColor
         gradientLayer.colors = [colorTop, colorBottom]
         gradientLayer.locations = [0.0, 1.0]
         gradientLayer.mask = fgProgressLayer
@@ -48,8 +47,8 @@ class ProgressBar: UIView, CAAnimationDelegate {
     
     lazy var bgGradientLayer: CAGradientLayer = {
         let gradientLayer = CAGradientLayer()
-        let colorTop = CustomColor.flipside.cgColor
-        let colorBottom = CustomColor.flipside.cgColor // Same color effectively solid, but keeps gradient structure
+        let colorTop = Theme.Colors.darkGray.cgColor
+        let colorBottom = Theme.Colors.darkGray.cgColor // Same color effectively solid, but keeps gradient structure
         gradientLayer.colors = [colorTop, colorBottom]
         gradientLayer.locations = [0.0, 1.0]
         gradientLayer.mask = bgProgressLayer
@@ -92,88 +91,15 @@ class ProgressBar: UIView, CAAnimationDelegate {
         fgProgressLayer.path = path
     }
     
-    public func setProgressBar(hours:Int, minutes:Int, seconds:Int) {
-        let hoursToSeconds = hours * 3600
-        let minutesToSeconds = minutes * 60
-        let totalSeconds = seconds + minutesToSeconds + hoursToSeconds
-        timerDuration = totalSeconds
+    public func setProgress(_ progress: Float) {
+        // progress is 0.0 (start) -> 1.0 (done).
+        // We want the ring to be full at start (1.0) and empty at done (0.0).
+        // So strokeEnd = 1.0 - progress.
+        fgProgressLayer.strokeEnd = CGFloat(1.0 - progress)
     }
     
-    public func start() {
-        if !animationDidStart {
-            startAnimation()
-        }else{
-            resumeAnimation()
-        }
-    }
-    
-    public func pause() {
-        pauseAnimation()
-    }
-    
+    /// Resets the progress bar to the finished (empty) state.
     public func stop() {
-        stopAnimation()
+        setProgress(0.0)
     }
-    
-    
-    fileprivate func startAnimation() {
-        
-        resetAnimation()
-        
-        fgProgressLayer.strokeEnd = 0.0
-        animation.keyPath = "strokeEnd"
-        animation.fromValue = CGFloat(0.0)
-        animation.toValue = CGFloat(1.0)
-        animation.duration = CFTimeInterval(timerDuration)
-        animation.delegate = self
-        animation.isRemovedOnCompletion = false
-        animation.isAdditive = true
-        animation.fillMode = CAMediaTimingFillMode.forwards
-        fgProgressLayer.add(animation, forKey: "strokeEnd")
-        animationDidStart = true
-        
-    }
-    
-    
-    fileprivate func resetAnimation() {
-        fgProgressLayer.speed = 1.0
-        fgProgressLayer.timeOffset = 0.0
-        fgProgressLayer.beginTime = 0.0
-        fgProgressLayer.strokeEnd = 0.0
-        animationDidStart = false
-    }
-    
-    
-    fileprivate func stopAnimation() {
-        fgProgressLayer.speed = 1.0
-        fgProgressLayer.timeOffset = 0.0
-        fgProgressLayer.beginTime = 0.0
-        fgProgressLayer.strokeEnd = 0.0
-        fgProgressLayer.removeAllAnimations()
-        animationDidStart = false
-    }
-    
-    
-    fileprivate func pauseAnimation(){
-        let pausedTime = fgProgressLayer.convertTime(CACurrentMediaTime(), from: nil)
-        fgProgressLayer.speed = 0.0
-        fgProgressLayer.timeOffset = pausedTime
-        
-    }
-    
-    
-    fileprivate func resumeAnimation(){
-        let pausedTime = fgProgressLayer.timeOffset
-        fgProgressLayer.speed = 1.0
-        fgProgressLayer.timeOffset = 0.0
-        fgProgressLayer.beginTime = 0.0
-        fgProgressLayer.beginTime = fgProgressLayer.convertTime(CACurrentMediaTime(), from: nil) - pausedTime
-    }
-    
-    internal func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
-        if flag {
-             stopAnimation()
-        }
-    }
-    
 }
