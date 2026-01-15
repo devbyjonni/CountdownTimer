@@ -28,8 +28,6 @@ class ViewController: UIViewController {
     
     // MARK: - UI Components
     
-    // MARK: - UI Components
-    
     private lazy var headerView: HeaderView = {
         let view = HeaderView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -40,7 +38,7 @@ class ViewController: UIViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         // Kern (Tracking)
-        let attrString = NSMutableAttributedString(string: "SESSION 2 OF 4")
+        let attrString = NSMutableAttributedString(string: "DEMO MODE")
         attrString.addAttribute(NSAttributedString.Key.kern, value: 3.0, range: NSRange(location: 0, length: attrString.length))
         label.attributedText = attrString
         
@@ -60,11 +58,31 @@ class ViewController: UIViewController {
     private lazy var timeLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "00:00:00"
+        label.text = "00:00"
         label.textColor = Theme.Colors.text
-        label.font = Theme.Fonts.timer() // Ensure this font is monospaced or looks good for single string
+        label.font = Theme.Fonts.timer()
         label.textAlignment = .center
         return label
+    }()
+    
+    // Timer Icon
+    private lazy var timerIconImageView: UIImageView = {
+        let iv = UIImageView()
+        iv.translatesAutoresizingMaskIntoConstraints = false
+        iv.image = UIImage(systemName: "timer", withConfiguration: UIImage.SymbolConfiguration(pointSize: 24, weight: .medium))
+        iv.tintColor = Theme.Colors.textSecondary
+        iv.contentMode = .scaleAspectFit
+        return iv
+    }()
+    
+    // Timer Stack (Text + Icon)
+    private lazy var timerStackView: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [timeLabel, timerIconImageView])
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.axis = .vertical
+        stack.alignment = .center
+        stack.spacing = 16
+        return stack
     }()
     
     // Player Controls
@@ -108,7 +126,8 @@ extension ViewController {
         
         view.addSubview(headerView)
         view.addSubview(progressBar)
-        view.addSubview(timeLabel)
+        // Add Stack instead of label directly
+        view.addSubview(timerStackView)
         view.addSubview(controlsView)
         view.addSubview(sessionLabel)
         view.addSubview(messageLabel)
@@ -124,9 +143,9 @@ extension ViewController {
             progressBar.widthAnchor.constraint(equalToConstant: 320),
             progressBar.heightAnchor.constraint(equalToConstant: 320),
             
-            // Timer Label
-            timeLabel.centerXAnchor.constraint(equalTo: progressBar.centerXAnchor),
-            timeLabel.centerYAnchor.constraint(equalTo: progressBar.centerYAnchor),
+            // Timer Stack (Centered in ProgressBar)
+            timerStackView.centerXAnchor.constraint(equalTo: progressBar.centerXAnchor),
+            timerStackView.centerYAnchor.constraint(equalTo: progressBar.centerYAnchor, constant: 10),
             
             // Controls
             controlsView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -141,6 +160,52 @@ extension ViewController {
             messageLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             messageLabel.centerYAnchor.constraint(equalTo: progressBar.centerYAnchor)
         ])
+        
+        setupInteractions()
+    }
+    
+    private func setupInteractions() {
+        timerStackView.isUserInteractionEnabled = true
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapTimeLabel))
+        timerStackView.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc private func didTapTimeLabel() {
+        guard !viewModel.isPlaying else { return } // Disable when playing
+        presentTimePicker()
+    }
+    
+    private func presentTimePicker() {
+        let alertController = UIAlertController(title: "Set Timer", message: "\n\n\n\n\n\n", preferredStyle: .actionSheet)
+        
+        let picker = UIDatePicker()
+        picker.datePickerMode = .countDownTimer
+        picker.translatesAutoresizingMaskIntoConstraints = false
+        alertController.view.addSubview(picker)
+        
+        NSLayoutConstraint.activate([
+            picker.centerXAnchor.constraint(equalTo: alertController.view.centerXAnchor),
+            picker.topAnchor.constraint(equalTo: alertController.view.topAnchor, constant: 20),
+            picker.heightAnchor.constraint(equalToConstant: 160)
+        ])
+        
+        let selectAction = UIAlertAction(title: "Start", style: .default) { [weak self] _ in
+            let duration = picker.countDownDuration
+            self?.viewModel.setDuration(duration)
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        
+        alertController.addAction(selectAction)
+        alertController.addAction(cancelAction)
+        
+        // iPad support
+        if let popover = alertController.popoverPresentationController {
+            popover.sourceView = timerStackView
+            popover.sourceRect = timerStackView.bounds
+        }
+        
+        present(alertController, animated: true, completion: nil)
     }
     
     override func viewDidLayoutSubviews() {
@@ -204,7 +269,7 @@ extension ViewController {
     
     private func handleTimerFinished() {
         messageLabel.isHidden = false
-        timeLabel.isHidden = true
+        timerStackView.isHidden = true
         progressBar.stop()
         AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
         
@@ -218,7 +283,7 @@ extension ViewController {
     
     private func resetUI() {
         messageLabel.isHidden = true
-        timeLabel.isHidden = false
+        timerStackView.isHidden = false
         progressBar.stop() // Reset animation
     }
 }

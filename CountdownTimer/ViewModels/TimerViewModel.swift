@@ -19,11 +19,9 @@ class TimerViewModel {
     private let defaultDuration: Int = 30 // 2 minutes
     private var cancellables = Set<AnyCancellable>()
     
-
-    
     // MARK: - Observables (Outputs)
     
-    @Published var timeLabelText: String = "00:00:00"
+    @Published var timeLabelText: String = "00:00"
     @Published var progress: Float = 0.0
     @Published var isPlaying: Bool = false
     
@@ -36,9 +34,9 @@ class TimerViewModel {
     }
     
     private func setupBindings() {
-        // Transform the Timer's timeString (tuple) into a formatted String
+        // Transform the Timer's timeString (tuple) into a formatted String (MM:SS)
         timer.$timeString
-            .map { "\($0.0):\($0.1):\($0.2)" }
+            .map { "\($0.0):\($0.1)" }
             .assign(to: &$timeLabelText)
         
         // Forward progress
@@ -57,6 +55,13 @@ class TimerViewModel {
     
     // MARK: - Inputs
     // Methods called by the View to triggers actions.
+    
+    /// Updates the timer duration and resets the state.
+    func setDuration(_ duration: TimeInterval) {
+        stop() // Ensure stopped
+        timer.setTimer(duration: duration)
+        // Note: Progress will auto-update via binding
+    }
     
     /// Starts the timer if not already running.
     func start() {
@@ -97,7 +102,7 @@ class TimerViewModel {
     private func reset() {
         isPlaying = false
         // Initialize timer with default
-        timer.setTimer(hours: 0, minutes: 0, seconds: defaultDuration)
+        timer.setTimer(duration: TimeInterval(defaultDuration))
         // Reset progress manually since timer might not emit immediately on reset if stopped
         progress = 0.0
     }

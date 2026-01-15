@@ -16,8 +16,8 @@ class CountdownTimer {
     // MARK: - Publishers
     // ViewModels subscribe to these for reactive updates.
     
-    /// Emits the current remaining time as strings (HH, MM, SS).
-    @Published var timeString: (hours: String, minutes: String, seconds: String) = ("00", "00", "00")
+    /// Emits the current remaining time as strings (MM, SS).
+    @Published var timeString: (minutes: String, seconds: String) = ("00", "00")
     
     /// Emits progress from 0.0 (start) to 1.0 (finished).
     @Published var progress: Float = 0.0
@@ -34,10 +34,9 @@ class CountdownTimer {
     
     // MARK: - Public Methods
     
-    func setTimer(hours: Int, minutes: Int, seconds: Int) {
-        let totalSeconds = (hours * 3600) + (minutes * 60) + seconds
-        self.totalDuration = TimeInterval(totalSeconds)
-        self.timeRemaining = self.totalDuration
+    func setTimer(duration: TimeInterval) {
+        self.totalDuration = duration
+        self.timeRemaining = duration
         
         updateState()
     }
@@ -98,17 +97,16 @@ class CountdownTimer {
     }
     
     private func updateState() {
-        // Time String
+        // Time String (MM:SS) - Minutes can go beyond 59
         let time = Int(ceil(timeRemaining))
-        let h = time / 3600
-        let m = (time % 3600) / 60
+        let m = time / 60
         let s = time % 60
         
-        timeString = (
-            String(format: "%02d", h),
-            String(format: "%02d", m),
-            String(format: "%02d", s)
-        )
+        // Ensure minutes show at least 2 digits, but can show more (e.g. 100)
+        let mString = m < 100 ? String(format: "%02d", m) : String(m)
+        let sString = String(format: "%02d", s)
+        
+        timeString = (mString, sString)
         
         // Progress (0.0 to 1.0)
         if totalDuration > 0 {

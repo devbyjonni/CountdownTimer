@@ -27,7 +27,7 @@ class HeaderView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor(red: 199/255, green: 210/255, blue: 254/255, alpha: 0.8) // Indigo-200/80
         
-        let attrString = NSMutableAttributedString(string: "DEEP WORK")
+        let attrString = NSMutableAttributedString(string: "ACTIVE")
         attrString.addAttribute(NSAttributedString.Key.kern, value: 2.0, range: NSRange(location: 0, length: attrString.length))
         label.attributedText = attrString
         
@@ -37,7 +37,7 @@ class HeaderView: UIView {
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "UI Design Systems"
+        label.text = "Focus Pulse"
         label.font = Theme.Fonts.title()
         label.textColor = Theme.Colors.text
         label.textAlignment = .center

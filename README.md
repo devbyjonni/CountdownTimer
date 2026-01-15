@@ -1,6 +1,6 @@
 # CountdownTimer
 
-![App Banner](your-image-2000x1000.png)
+![App Banner](Docs/AppBanner.png)
 
 A high-precision, modern countdown timer built for iOS.
 

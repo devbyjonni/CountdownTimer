@@ -44,7 +44,7 @@ struct Theme {
             return .systemFont(ofSize: 10, weight: .bold)
         }
         
-        static func timer(size: CGFloat = 48) -> UIFont {
+        static func timer(size: CGFloat = 64) -> UIFont {
             // Monospaced to prevent jitter
             return .monospacedDigitSystemFont(ofSize: size, weight: .black)
         }
